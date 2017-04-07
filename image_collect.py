@@ -1,6 +1,8 @@
 '''Getter images from bijin watch.'''
 import os
 import datetime
+import time
+import random
 import urllib.request
 
 AREAS = ['hokkaido',
@@ -69,6 +71,8 @@ def get_image():
             print(dirpath + file_name + ' output')
 
             time_standard += datetime.timedelta(minutes=1)
+            # waiting time (4 - 6 sec)
+            time.sleep(4 + random.randint(0, 2))
             if time_standard.strftime('%H%M') == '0000':
                 break
 
