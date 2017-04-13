@@ -58,12 +58,12 @@ def load_data(data_type):
     filenames, images, labels = [], [], []
     walk = list(filter(lambda _:data_type in _[0], os.walk('faces')))
     for (root, dirs, files) in walk:
-        filenames += ['{}/{}'.format(root, _) for _ in files]
+        filenames += ['{}/{}'.format(root, _) for _ in files if not _.startswith('.')]
     # Shuffle files
     random.shuffle(filenames)
     # Read, resize, and reshape images
-    images = list(map(lambda _: tf.image.decode_jpeg(tf.read_file(_), channels=3), filenames))
-    images = list(map(lambda _: tf.image.resize_images(_, [32, 32]), images))
+    images = map(lambda _: tf.image.decode_jpeg(tf.read_file(_), channels=3), filenames)
+    images = map(lambda _: tf.image.resize_images(_, [32, 32]), images)
     images = list(map(lambda _: tf.reshape(_, [-1]), images))
     for filename in filenames:
         label = np.zeros(47)
@@ -136,6 +136,8 @@ def main():
     with tf.Graph().as_default():
         train_images, train_labels = load_data('train')
         test_images, test_labels = load_data('test')
+        print("train_images", len(train_images))
+        print("test_images", len(test_images))
         x = tf.placeholder('float', shape=[None, 32 * 32 * 3])  # 32 * 32, 3 channels
         y_ = tf.placeholder('float', shape=[None, 47])  # 47 classes
         keep_prob = tf.placeholder('float')
