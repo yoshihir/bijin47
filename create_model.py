@@ -10,48 +10,48 @@ label_dict = {
     'iwate':2,
     'sendai':3, # miyagi
     'akita':4,
-    #'yamagata':5, nothing
-    'fukushima':6,
-    'ibaraki':7,
-    'tochigi':8,
-    'gunma':9,
-    'saitama':10,
-    'chiba':11,
-    'tokyo':12,
-    'kanagawa':13,
-    'niigata':14,
-    #'toyama':15, nothing
-    'kanazawa':16,
-    'fukui':17,
-    'yamanashi':18,
-    'nagano':19,
-    #'gifu':20, nothing
-    'shizuoka':21,
-    'nagoya':22, #aichi
-    #'mie':23, nothing
-    #'shiga':24, nothing
-    'kyoto':25,
-    'osaka':26,
-    'kobe':27, #hyogo
-    'nara':28,
-    #'wakayama':29, nothing
-    'tottori':30,
-    #'shimane':31, nothing
-    'okayama':32,
-    'hiroshima':33,
-    'yamaguchi':34,
-    'tokushima':35,
-    'kagawa':36,
-    #'ehime':37, nothing
-    #'kochi':38, nothing
-    'fukuoka':39,
-    'saga':40,
-    'nagasaki':41,
-    'kumamoto':42,
-    #'oita':43, nothing
-    'miyazaki':44,
-    'kagoshima':45,
-    'okinawa':46,
+    #'yamagata':nothing
+    'fukushima':5,
+    'ibaraki':6,
+    'tochigi':7,
+    'gunma':8,
+    'saitama':9,
+    'chiba':10,
+    'tokyo':11,
+    'kanagawa':12,
+    'niigata':13,
+    #'toyama':nothing
+    'kanazawa':14,
+    'fukui':15,
+    'yamanashi':16,
+    'nagano':17,
+    #'gifu':nothing
+    'shizuoka':18,
+    'nagoya':19, #aichi
+    #'mie':nothing
+    #'shiga':nothing
+    'kyoto':20,
+    'osaka':21,
+    'kobe':22, #hyogo
+    'nara':23,
+    #'wakayama':nothing
+    'tottori':24,
+    #'shimane':nothing
+    'okayama':25,
+    'hiroshima':26,
+    'yamaguchi':27,
+    'tokushima':28,
+    'kagawa':29,
+    #'ehime':nothing
+    #'kochi':nothing
+    'fukuoka':30,
+    'saga':31,
+    'nagasaki':32,
+    'kumamoto':33,
+    #'oita':nothing
+    'miyazaki':34,
+    'kagoshima':35,
+    'okinawa':36,
     }
 
 def load_data(data_type):
@@ -66,7 +66,7 @@ def load_data(data_type):
     images = map(lambda _: tf.image.resize_images(_, [32, 32]), images)
     images = list(map(lambda _: tf.reshape(_, [-1]), images))
     for filename in filenames:
-        label = np.zeros(47)
+        label = np.zeros(37)
         for k, v in label_dict.items():
             if k in filename:
                 label[v] = 1.
@@ -126,8 +126,8 @@ def inference(images_placeholder, keep_prob):
     h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
 
     # Full connected layer
-    W_fc2 = weight_variable([1024,47])
-    b_fc2 = bias_variable([47])
+    W_fc2 = weight_variable([1024,37])
+    b_fc2 = bias_variable([37])
 
     return tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
 
@@ -136,10 +136,8 @@ def main():
     with tf.Graph().as_default():
         train_images, train_labels = load_data('train')
         test_images, test_labels = load_data('test')
-        print("train_images", len(train_images))
-        print("test_images", len(test_images))
         x = tf.placeholder('float', shape=[None, 32 * 32 * 3])  # 32 * 32, 3 channels
-        y_ = tf.placeholder('float', shape=[None, 47])  # 47 classes
+        y_ = tf.placeholder('float', shape=[None, 37])  # 37 classes
         keep_prob = tf.placeholder('float')
 
         y_conv = inference(x, keep_prob)
@@ -182,7 +180,7 @@ def main():
             x: test_images, y_: test_labels, keep_prob: 1.0 })
         print ('test accuracy {}'.format(test_accuracy))
         # Save model
-        # Windows
+        # for Windows
         cwd = os.getcwd()
         save_path = saver.save(sess, cwd + "/model.ckpt")
 

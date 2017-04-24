@@ -1,0 +1,2 @@
+model_checkpoint_path: "c:\\Users\\lri\\Desktop\\github/model.ckpt"
+all_model_checkpoint_paths: "c:\\Users\\lri\\Desktop\\github/model.ckpt"
